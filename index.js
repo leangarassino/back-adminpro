@@ -7,6 +7,10 @@ const { dbConnection } = require('./databases/config')
 const app = express();
 app.use(cors());
 
+// Lectura y parseo de rutas
+
+app.use( express.json());
+
 // Usuario: leangcl91
 // Password: DoZ2fp8qeqoOpyoe
 
@@ -17,16 +21,8 @@ dbConnection();
 
 // Inicializa la aplicación de Express
 
-app.get( '/', (req, res) => {
-
-    res.json(
-        {
-            ok: true,
-            msg: 'Hola Mundo'
-        }
-    )
-
-})
+app.use( '/api/usuarios', require('./routes/usuario') )
+app.use( '/api/login', require('./routes/auth') )
 
 
 
