@@ -12,12 +12,29 @@ const { generateJWT } = require('../helpers/jwtSign')
 
 const getUsuarios = async (req, res) => {
 
-    const users = await User.find({}, 'nombre email google role password');
+    const desde = Number(req.query.desde) || 0;
+
+    console.log(desde)
+
+    // Más eficiente, sólo realiza y espera una petición
+    const [users, total] = await Promise.all([
+        User.find({}, 'nombre email google role password img')
+                            .skip(desde)
+                            .limit(5),
+        User.count()
+    ])
+    // Menos eficiente
+    // const users = await User.find({}, 'nombre email google role password')
+    //                         .skip(desde)
+    //                         .limit(5)
+
+    // const total = await User.count();
 
     res.json({
         ok: true,
         users,
-        uid: req.uid
+        uid: req.uid,
+        total
     })
 }
 
