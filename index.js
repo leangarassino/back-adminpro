@@ -18,6 +18,10 @@ app.use( express.json());
 
 dbConnection();
 
+// Directorio Público
+
+app.use( express.static('public'))
+
 
 // Inicializa la aplicación de Express
 
