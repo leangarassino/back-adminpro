@@ -47,12 +47,31 @@ const createHospitals = async (req, res) => {
 
 const putHospitals = async (req, res) => {
     
+    id = req.params.id;
+    uid = req.uid;
+
     try {
-        const hospitals = Hospitals.find();
+
+      const hospitalDB = await Hospitals.findById( id )
+
+      if( !hospitalDB ) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'El id del hospital no existe'
+        })
+      }
+
+      const hospital = {
+        ...req.body,
+        usuario: uid
+      }
+      const putHospital = await Hospitals.findByIdAndUpdate(id, hospital, {new: true});
+
         res.json({
-            ok: true,
-        msg: "Hola soy el Hospital3",
+        ok: true,
+        hospital: putHospital
     });
+
 } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -63,13 +82,27 @@ const putHospitals = async (req, res) => {
 };
 
 const deleteHospitals = async (req, res) => {
+
+    id = req.params.id;
     
     try {
-      const hospitals = Hospitals.find();
+
+      const hospitalDB = await Hospitals.findById( id );
+
+      if ( !hospitalDB ) {
+        return res.status(404).json({
+          ok: false,
+          msg: 'No se encontró el hospital por id'
+        })
+      }
+
+      await Hospitals.findByIdAndDelete(id);
+
       res.json({
         ok: true,
-        msg: "Hola soy el Hospital4",
+        msg: "Se ha eliminado correctamente el hospital",
       });
+
     } catch (error) {
       console.log(error);
       res.status(500).json({

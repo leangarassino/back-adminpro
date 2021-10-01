@@ -18,8 +18,15 @@ router.post( '/', [
     check('hospitals','El hospital id debe ser válido').isMongoId(),
     validateField
 ], createMedics)
-router.put( '/:id', putMedics)
-router.delete( '/:id', deleteMedics)
+router.put( '/:id', 
+    [
+    validateJWT,
+    check('nombre', 'El nombre del médico es obligatorio').not().isEmpty(),
+    check('hospitals', 'El hospital id debe ser válido').isMongoId(),
+    validateField
+    ]
+, putMedics)
+router.delete( '/:id', validateJWT, deleteMedics)
 
 module.exports = router
 

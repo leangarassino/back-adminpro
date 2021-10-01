@@ -3,7 +3,6 @@ const User = require('../models/usuario')
 const bcrypt = require('bcryptjs');
 const { generateJWT } = require('../helpers/jwtSign');
 const { googleVerify } = require('../helpers/google-verify');
-const { findOne } = require('../models/usuario');
 
 
 
@@ -87,8 +86,19 @@ const loginGoogle = async (req, res) => {
             msg: 'El token es incorrecto'
         })
     }
-
-
 }
 
-module.exports = { login, loginGoogle }
+const renewToken = async (req, res) => {
+
+    const uid = req.uid;
+    
+
+    const token = await generateJWT( uid );
+    res.json({
+        ok:true,
+        token
+    })
+        
+}
+
+module.exports = { login, loginGoogle, renewToken }
